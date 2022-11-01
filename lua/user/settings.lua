@@ -34,7 +34,7 @@ local options = {
   linebreak = true,                         -- companion to wrap, don't split words
   scrolloff = 8,                            -- minimal number of screen lines to keep above and below the cursor
   sidescrolloff = 8,                        -- minimal number of screen columns either side of cursor if wrap is `false`
-  guifont = { "MesloLGS NF", ":h17" },      -- the font used in graphical neovim applications
+  guifont = { "MesloLGS Nerd Font", ":h17" },      -- the font used in graphical neovim applications
 }
 
 vim.opt.spelllang:append "cjk"              -- disable spellchecking for asian characters
