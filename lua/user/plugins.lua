@@ -42,21 +42,37 @@ packer.init({
 })
 
 -- List of plugins to install
-return packer.startup(function()
+return packer.startup(function(use)
   -- Misc
-  use "wbthomason/packer.nvim"
-  use "nvim-lua/plenary.nvim"
+  use "wbthomason/packer.nvim"          -- Have packer manage itself
+  use "nvim-lua/popup.nvim"             -- An implementation of the Popup API from vim to neovim
+  use "nvim-lua/plenary.nvim"           -- Useful lua functions used by lots of plugins
+  use "nvim-tree/nvim-web-devicons"
   use {
     "nvim-tree/nvim-tree.lua",
     requires = {
       "nvim-tree/nvim-web-devicons"
     }
   }
-  use "nvim-tree/nvim-web-devicons"
 
   -- Colorschemes
   use "Mofiqul/dracula.nvim"
   use "wadackel/vim-dogrun"
+  use "sainnhe/everforest"
+
+  -- cmp plugins
+  use "hrsh7th/nvim-cmp"                -- The completion plugin
+  use "hrsh7th/cmp-buffer"              -- buffer completions
+  use "hrsh7th/cmp-path"                -- path completions
+  use "hrsh7th/cmp-cmdline"             -- cmdline completions
+  use "saadparwaiz1/cmp_luasnip"        -- snippet completions
+
+  -- Snippets
+  use "L3MON4D3/LuaSnip"                -- snippet engine
+  use "rafamadriz/friendly-snippets"    -- a bunch of snippets to use
+
+  -- LSP
+  use "neovim/nvim-lspconfig"
 
   -- Git
   use "lewis6991/gitsigns.nvim"

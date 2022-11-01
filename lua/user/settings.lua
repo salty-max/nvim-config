@@ -34,10 +34,13 @@ local options = {
   linebreak = true,                         -- companion to wrap, don't split words
   scrolloff = 8,                            -- minimal number of screen lines to keep above and below the cursor
   sidescrolloff = 8,                        -- minimal number of screen columns either side of cursor if wrap is `false`
-  guifont = { "MesloLGS NF", ":h17" },                -- the font used in graphical neovim applications
+  guifont = { "MesloLGS NF", ":h17" },      -- the font used in graphical neovim applications
 }
 
-vim.opt.shortmess:append "c"
+vim.opt.spelllang:append "cjk"              -- disable spellchecking for asian characters
+vim.opt.shortmess:append "c"                -- don't show redundant messages from ins-completion-menu
+vim.opt.shortmess:append "I"                -- dont't show the default intro message
+vim.opt.whichwrap:append "<,>,[,],h,l"
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
