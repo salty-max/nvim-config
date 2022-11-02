@@ -9,7 +9,7 @@ telescope.setup {
   defaults = {
     prompt_prefix = " ",
     selection_caret = " ",
-    path_display = { "smart" },
+    path_display = { "truncated" },
     sorting_strategy = "ascending",
     file_ignore_patterns = { ".git/", "node_modules" },
     layout_config = {
