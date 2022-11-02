@@ -56,7 +56,11 @@ return packer.startup(function(use)
   }
   use "windwp/nvim-autopairs"
   use "numToStr/Comment.nvim"
+  use "JoosepAlviste/nvim-ts-context-commentstring"
   use "goolord/alpha-nvim"
+  use "akinsho/bufferline.nvim"
+  use "nvim-lualine/lualine.nvim"
+  use "lewis6991/impatient.nvim"
 
   -- Colorschemes
   use "Mofiqul/dracula.nvim"
@@ -75,6 +79,7 @@ return packer.startup(function(use)
 
   -- Telescope
   use "nvim-telescope/telescope.nvim"
+  use "ahmedkhalf/project.nvim"
 
   -- Treesitter
   use "nvim-treesitter/nvim-treesitter"
