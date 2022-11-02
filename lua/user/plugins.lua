@@ -61,6 +61,10 @@ return packer.startup(function(use)
   use "akinsho/bufferline.nvim"
   use "nvim-lualine/lualine.nvim"
   use "lewis6991/impatient.nvim"
+  use "akinsho/toggleterm.nvim"
+  use "moll/vim-bbye"
+  use "lukas-reineke/indent-blankline.nvim"
+  use "Shatur/neovim-session-manager"
 
   -- Colorschemes
   use "Mofiqul/dracula.nvim"
@@ -92,6 +96,7 @@ return packer.startup(function(use)
   use "neovim/nvim-lspconfig"
   use "williamboman/mason.nvim"
   use "williamboman/mason-lspconfig.nvim"
+  use "jose-elias-alvarez/null-ls.nvim"
   use "RRethy/vim-illuminate"
 
   -- Git
@@ -102,6 +107,9 @@ return packer.startup(function(use)
 
   -- Rust
   use "simrat39/rust-tools.nvim"
+
+  -- Which key
+  use "folke/which-key.nvim"
   
   if PACKER_BOOSTRAP then
     require("packer").sync()

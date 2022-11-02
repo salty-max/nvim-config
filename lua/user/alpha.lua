@@ -16,13 +16,14 @@ dashboard.section.header.val = {
 [[                                                      ]],
 }
 dashboard.section.buttons.val = {
-  dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
-  dashboard.button("e", " " .. " New file", ":ene <BAR> startinsert <CR>"),
-  dashboard.button("p", " " .. " Find project", ":lua require('telescope').extensions.projects.projects()<CR>"),
-  dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
-  dashboard.button("t", " " .. " Find text", ":Telescope live_grep <CR>"),
-  dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
-  dashboard.button("q", " " .. " Quit", ":qa<CR>"),
+  dashboard.button("f", "" .. "   Find File", "<cmd>Telescope find_files<cr>"),
+  dashboard.button("e", "" .. "   New file", "<cmd>ene!<cr>"),
+  dashboard.button("p", "" .. "   Project", "<cmd>lua require('telescope').extensions.projects.projects()<cr>"),
+  dashboard.button("r", "" .. "   Recents", "<cmd>Telescope oldfiles <cr>"),
+  dashboard.button("t", "" .. "   Find Word", "<cmd>Telescope live_grep <cr>"),
+  dashboard.button("Sl", "" .. "   Last Session", "<cmd>SessionManager! load_last_session<cr>"),
+  dashboard.button("c", "" .. "   Config", "<cmd>e $MYVIMRC <cr>"),
+  dashboard.button("q", "" .. "   Quit", "<cmd>qa<cr>"),
 }
 local function footer()
   return "Maxime <salty_max> Blanc"
