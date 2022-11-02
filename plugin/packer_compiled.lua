@@ -174,6 +174,26 @@ _G.packer_plugins = {
     path = "/Users/max/.local/share/nvim/site/pack/packer/start/popup.nvim",
     url = "https://github.com/nvim-lua/popup.nvim"
   },
+  ["rust-tools.nvim"] = {
+    loaded = true,
+    path = "/Users/max/.local/share/nvim/site/pack/packer/start/rust-tools.nvim",
+    url = "https://github.com/simrat39/rust-tools.nvim"
+  },
+  ["schemastore.nvim"] = {
+    loaded = true,
+    path = "/Users/max/.local/share/nvim/site/pack/packer/start/schemastore.nvim",
+    url = "https://github.com/b0o/schemastore.nvim"
+  },
+  ["telescope.nvim"] = {
+    loaded = true,
+    path = "/Users/max/.local/share/nvim/site/pack/packer/start/telescope.nvim",
+    url = "https://github.com/nvim-telescope/telescope.nvim"
+  },
+  ["tokyonight.nvim"] = {
+    loaded = true,
+    path = "/Users/max/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
+    url = "https://github.com/folke/tokyonight.nvim"
+  },
   ["vim-dogrun"] = {
     loaded = true,
     path = "/Users/max/.local/share/nvim/site/pack/packer/start/vim-dogrun",

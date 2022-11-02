@@ -59,6 +59,7 @@ return packer.startup(function(use)
   use "Mofiqul/dracula.nvim"
   use "wadackel/vim-dogrun"
   use "sainnhe/everforest"
+  use "folke/tokyonight.nvim"
 
   -- cmp plugins
   use "hrsh7th/nvim-cmp"                -- The completion plugin
@@ -68,6 +69,9 @@ return packer.startup(function(use)
   use "hrsh7th/cmp-path"                -- path completions
   use "hrsh7th/cmp-cmdline"             -- cmdline completions
   use "saadparwaiz1/cmp_luasnip"        -- snippet completions
+
+  -- Telescope
+  use "nvim-telescope/telescope.nvim"
 
   -- Snippets
   use "L3MON4D3/LuaSnip"                -- snippet engine
@@ -81,6 +85,12 @@ return packer.startup(function(use)
 
   -- Git
   use "lewis6991/gitsigns.nvim"
+
+  -- SchemaStore
+  use "b0o/schemastore.nvim"
+
+  -- Rust
+  use "simrat39/rust-tools.nvim"
   
   if PACKER_BOOSTRAP then
     require("packer").sync()
