@@ -54,6 +54,9 @@ return packer.startup(function(use)
       "nvim-tree/nvim-web-devicons"
     }
   }
+  use "windwp/nvim-autopairs"
+  use "numToStr/Comment.nvim"
+  use "goolord/alpha-nvim"
 
   -- Colorschemes
   use "Mofiqul/dracula.nvim"
