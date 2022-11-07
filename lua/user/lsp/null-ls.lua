@@ -18,7 +18,6 @@ null_ls.setup {
         group = augroup,
         buffer = bufnr,
         callback = function()
-          -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
           vim.lsp.buf.format({
             bufnr = bufnr,
             filter = function(client)
@@ -33,6 +32,7 @@ null_ls.setup {
     formatting.eslint_d,
     formatting.rustfmt,
     formatting.gofmt,
+    formatting.deno_fmt,
     formatting.prettier.with {
       extra_filetypes = { "toml" },
       extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" },

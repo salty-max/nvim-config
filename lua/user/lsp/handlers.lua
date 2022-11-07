@@ -1,8 +1,26 @@
 local M = {}
 
+local tbl_contains = vim.tbl_contains
+local tbl_isempty = vim.tbl_isempty
+
 local status_cmp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 if not status_cmp_ok then
 	return
+end
+
+M.formatting = { format_on_save = { enabled = true } }
+if type(M.formatting.format_on_save) == "boolean" then
+  M.formatting.format_on_save = { enabled = M.formatting.format_on_save }
+end
+
+M.format_opts = vim.deepcopy(M.formatting)
+M.format_opts.disabled = nil
+M.format_opts.format_on_save = nil
+M.format_opts.filter = function(client)
+  local filter = M.formatting.filter
+  local disabled = M.formatting.disabled or {}
+  -- check if client is fully disabled or filtered by function
+  return not (vim.tbl_contains(disabled, client.name) or (type(filter) == "function" and not filter(client)))
 end
 
 M.capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -52,23 +70,85 @@ M.setup = function()
 end
 
 local function lsp_keymaps(bufnr)
-	local opts = { noremap = true, silent = true }
-	local keymap = vim.api.nvim_buf_set_keymap
-	keymap(bufnr, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-	keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-	keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-	keymap(bufnr, "n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-	keymap(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-	keymap(bufnr, "n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-	keymap(bufnr, "n", "<leader>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>", opts)
-	keymap(bufnr, "n", "<leader>li", "<cmd>LspInfo<cr>", opts)
-	keymap(bufnr, "n", "<leader>lI", "<cmd>LspInstallInfo<cr>", opts)
-	keymap(bufnr, "n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
-	keymap(bufnr, "n", "<leader>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", opts)
-	keymap(bufnr, "n", "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", opts)
-	keymap(bufnr, "n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-	keymap(bufnr, "n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-	keymap(bufnr, "n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
+  local capabilities = M.capabilities
+  local lsp_mappings = {
+    n = {
+      ["<leader>ld"] = { function() vim.diagnostic.open_float() end, desc = "Hover diagnostics" },
+      ["[d"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous diagnostic" },
+      ["]d"] = { function() vim.diagnostic.goto_next() end, desc = "Next diagnostic" },
+      ["gl"] = { function() vim.diagnostic.open_float() end, desc = "Hover diagnostics" },
+    },
+    v = {},
+  }
+
+  lsp_mappings.n["<leader>la"] = { function() vim.lsp.buf.code_action() end, desc = "LSP code action" }
+  lsp_mappings.v["<leader>la"] = lsp_mappings.n["<leader>la"]
+
+  lsp_mappings.n["gD"] = { function() vim.lsp.buf.declaration() end, desc = "Declaration of current symbol" }
+
+  lsp_mappings.n["gd"] = { function() vim.lsp.buf.definition() end, desc = "Show the definition of current symbol" }
+  lsp_mappings.n["<leader>lf"] = {
+    function() vim.lsp.buf.format(M.format_opts) end,
+    desc = "Format code",
+  }
+  lsp_mappings.v["<leader>lf"] = lsp_mappings.n["<leader>lf"]
+
+  vim.api.nvim_buf_create_user_command(
+    bufnr,
+    "Format",
+    function() vim.lsp.buf.format(M.format_opts) end,
+    { desc = "Format file with LSP" }
+  )
+  local autoformat = M.formatting.format_on_save
+  local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+  if
+    autoformat.enabled
+    and (tbl_isempty(autoformat.allow_filetypes or {}) or tbl_contains(autoformat.allow_filetypes, filetype))
+    and (tbl_isempty(autoformat.ignore_filetypes or {}) or not tbl_contains(autoformat.ignore_filetypes, filetype))
+  then
+    local autocmd_group = "auto_format_" .. bufnr
+    vim.api.nvim_create_augroup(autocmd_group, { clear = true })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = autocmd_group,
+      buffer = bufnr,
+      desc = "Auto format buffer " .. bufnr .. " before save",
+      callback = function()
+        if vim.g.autoformat_enabled then
+          vim.lsp.buf.format(utils.default_tbl({ bufnr = bufnr }, M.format_opts))
+        end
+      end,
+    })
+  end
+
+  local highlight_name = vim.fn.printf("lsp_document_highlight_%d", bufnr)
+  vim.api.nvim_create_augroup(highlight_name, {})
+  vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+    group = highlight_name,
+    buffer = bufnr,
+    callback = function() vim.lsp.buf.document_highlight() end,
+  })
+  vim.api.nvim_create_autocmd("CursorMoved", {
+    group = highlight_name,
+    buffer = bufnr,
+    callback = function() vim.lsp.buf.clear_references() end,
+  })
+
+  lsp_mappings.n["K"] = { function() vim.lsp.buf.hover() end, desc = "Hover symbol details" }
+
+  lsp_mappings.n["gI"] = { function() vim.lsp.buf.implementation() end, desc = "Implementation of current symbol" }
+
+  lsp_mappings.n["gr"] = { function() vim.lsp.buf.references() end, desc = "References of current symbol" }
+
+  lsp_mappings.n["<leader>lr"] = { function() vim.lsp.buf.rename() end, desc = "Rename current symbol" }
+
+  lsp_mappings.n["<leader>lh"] = { function() vim.lsp.buf.signature_help() end, desc = "Signature help" }
+
+  lsp_mappings.n["gT"] = { function() vim.lsp.buf.type_definition() end, desc = "Definition of current type" }
+
+  utils.set_mappings(lsp_mappings, { buffer = bufnr })
+  if not vim.tbl_isempty(lsp_mappings.v) then
+    utils.which_key_register({ v = { ["<leader>"] = { l = { name = "LSP" } } } }, { buffer = bufnr })
+  end
 end
 
 M.on_attach = function(client, bufnr)

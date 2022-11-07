@@ -62,9 +62,9 @@ return packer.startup(function(use)
   use "nvim-lualine/lualine.nvim"
   use "lewis6991/impatient.nvim"
   use "akinsho/toggleterm.nvim"
-  use "moll/vim-bbye"
   use "lukas-reineke/indent-blankline.nvim"
   use "Shatur/neovim-session-manager"
+  use "famiu/bufdelete.nvim"
 
   -- Colorschemes
   use "Mofiqul/dracula.nvim"
